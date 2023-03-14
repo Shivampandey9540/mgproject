@@ -1,0 +1,636 @@
+openapi: 3.0.1
+info:
+  version: 1.0.1
+  title: Todo App
+  description: A small scale application for Todo backend
+  contact:
+    email: Shivampandey9540@gmail.com
+
+servers:
+  - url: http://localhost:{PORT}
+    description: Work only for Localhost
+    variables:
+      PORT:
+        default: "4000"
+        enum:
+          - "3000"
+          - "4000"
+  - url: https://{Url}
+    description: Add your Security and url
+    variables:
+      url:
+        default: "https"
+        enum:
+          - "http"
+          - "https"
+
+paths:
+  /Create:
+    post:
+      tags:
+        - Post
+      summary: Create an data in database
+      requestBody:
+        description: Pass the Title  and Task (Task is optional)
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Title:
+                  type: string
+                Task:
+                  type: string
+              required:
+                - Title
+
+      responses:
+        200:
+          description: All good success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+                  Todo:
+                    type: object
+        400:
+          description: Error due to un-sufficent data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  message:
+                    type: string
+                  IssueOccured:
+                    type: boolean
+        401:
+          description: Todo with same Title already Exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Error:
+                    type: string
+
+        402:
+          description: Some Internal Error be with you soon
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Error:
+                    type: string
+  /Gettodos:
+    get:
+      tags:
+        - Get
+      summary: Getting the All the Todos from here
+      responses:
+        200:
+          description: All good success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+                  data:
+                    type: array
+        401:
+          description: Some type of Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+                  Error:
+                    type: object
+  /Gettodo/{_id}:
+    get:
+      tags:
+        - Get
+      summary: Getting data based on Paramater
+      parameters:
+        - in: path
+          name: _id
+          required: true
+
+      responses:
+        200:
+          description: All good success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+                  data:
+                    type: object
+
+        401:
+          description: id passed by here is not Valid id type in mongoose
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+                  Titleid:
+                    type: boolean
+        402:
+          description: NO Data is Availabel for this id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+        403:
+          description: some Error has been from Server wait until we check the Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+  /Add_Task/{Title_id}:
+    put:
+      tags:
+        - Put
+      summary: Edited the Task
+      requestBody:
+        description: send Data you want to add in Todos
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                NewTask:
+                  type: string
+            required:
+              - NewTask
+
+      parameters:
+        - in: path
+          name: Title_id
+          required: true
+
+      responses:
+        200:
+          description: All good success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  message:
+                    type: string
+                  Task:
+                    type: string
+                  NewTask:
+                    type: object
+        400:
+          description: Some error has been occured in backend
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+                  Error:
+                    type: object
+        401:
+          description: titleid is not Given in this path (it will not work here because we have required for Title)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+                  Title:
+                    type: boolean
+        402:
+          description: Passed id's is not a valid ObjectId for mongoose check Which one is wrong
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+                  TitileId:
+                    type: boolean
+        404:
+          description: no data available with this id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+        405:
+          description: NO Data has been passed  for change
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+  /ChangeTitle/{Title_id}:
+    put:
+      tags:
+        - Put
+      summary: Change the title
+      requestBody:
+        description: send Data you want to add in Todos
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                changeTitle:
+                  type: string
+            required:
+              - changeTitle
+
+      parameters:
+        - in: path
+          name: Title_id
+          required: true
+
+      responses:
+        200:
+          description: All good success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  data:
+                    type: object
+        400:
+          description: Some error has been occured in backend
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+                  Error:
+                    type: object
+        401:
+          description: titleid is not Given in this path (it will not work here because we have required for Title)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+                  Title:
+                    type: boolean
+        402:
+          description: Passed id's is not a valid ObjectId for mongoose check Which one is wrong
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+                  TitileId:
+                    type: boolean
+        403:
+          description: Use of This title already exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  message:
+                    type: string
+                  Title:
+                    type: string
+        404:
+          description: no data available with this id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+        405:
+          description: NO Data has been passed for change
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+
+  /Change_Todo/{Title_id}/{Task_id}:
+    put:
+      tags:
+        - Put
+      summary: Edited the Task
+      requestBody:
+        description: send Data you want to change
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                changeTask:
+                  type: string
+            required:
+              - changeTask
+
+      parameters:
+        - in: path
+          name: Title_id
+          required: true
+        - in: path
+          name: Task_id
+          required: true
+
+      responses:
+        200:
+          description: All good success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  data:
+                    type: object
+
+        401:
+          description: title id, Task_id , TaskChange, something is not passed through requirement check
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+                  Missing:
+                    type: object
+                    properties:
+                      Titleid:
+                        type: boolean
+                      Taskid:
+                        type: boolean
+                      Change:
+                        type: boolean
+        402:
+          description: Passed id's is not a valid ObjectId for mongoose check Which one is wrong
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+                  TitileId:
+                    type: boolean
+                  TaskId:
+                    type: boolean
+        403:
+          description: some Error has been from Server wait until we check the Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Error:
+                    type: object
+  /DeleteTask/{Title_id}/{Task_id}:
+    delete:
+      tags:
+        - Delete
+      summary: Deleting a Single Task from all
+      requestBody:
+        description: send Data you want to change
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                changeTask:
+                  type: string
+            required:
+              - changeTask
+
+      parameters:
+        - in: path
+          name: Title_id
+          required: true
+        - in: path
+          name: Task_id
+          required: true
+
+      responses:
+        200:
+          description: Task has been deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+
+        400:
+          description: Data is not Available
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+
+        401:
+          description: title id, Task_id   is not passed through requirement check
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+                  Titleid:
+                    type: boolean
+                  Taskid:
+                    type: boolean
+        402:
+          description: Passed id's is not a valid ObjectId for mongoose check Which one is wrong
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+                  TitileId:
+                    type: boolean
+                  TaskId:
+                    type: boolean
+        403:
+          description: some Error has been from Server wait until we check the Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+                  Error:
+                    type: object
+        404:
+          description: Data is not Available for this
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+
+  /DeleteTasks/{Title_id}:
+    delete:
+      tags:
+        - Delete
+      summary: Delete the whole Todo with TitleId
+
+      parameters:
+        - in: path
+          name: Title_id
+          required: true
+
+      responses:
+        200:
+          description: All good success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  data:
+                    type: object
+        400:
+          description: Passed id is not ObjectId check the id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Message:
+                    type: string
+
+        401:
+          description: titleid is not Given in this path (it will not work here because we have required for Title)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Success:
+                    type: boolean
+                  Error:
+                    type: object

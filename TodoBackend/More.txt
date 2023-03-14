@@ -1,0 +1,25 @@
+
+- Create a Search by the Word
+
+
+______________________________________________________________
+- Make a check  if work  is Done  but shouldn't be deleted______________________
+______________________________________________________________
+
+
+______________________________
+- Make Important  is Important--------
+______________________________
+
+
+- Search should also work for the Task and title based approch
+
+
+_________________________________________________
+- way to Add more then one Task in one Two Do
+  {
+     "title" : "title is here",
+     "Task" : "test the work"_____________________________________
+     "Task" : "test the work2"
+  }
+  ________________________________________________
